@@ -47,8 +47,8 @@ int main()
 
         SOCKADDR_IN addr;
         int sizeofaddr = sizeof(addr);
-        addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-        addr.sin_port = htons(2000);
+        addr.sin_addr.s_addr = INADDR_ANY;
+        addr.sin_port = htons(1999);
         addr.sin_family = AF_INET;
 
         SOCKET sListen = socket(AF_INET, SOCK_STREAM, NULL);
@@ -99,6 +99,6 @@ int main()
     }
     catch (string errorMsgText)
     {
-        cout << endl << "WSAGetLastError: " << errorMsgText;
+        cout << endl << "WSAGetLastError: " << errorMsgText << WSAGetLastError();
     }
 }

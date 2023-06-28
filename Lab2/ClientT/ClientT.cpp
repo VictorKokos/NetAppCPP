@@ -47,8 +47,8 @@ int main()
 
 		SOCKADDR_IN addr;
 		int sizeofaddr = sizeof(addr);
-		addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-		addr.sin_port = htons(2000);
+		addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // АДРЕС СЕРВЕРА
+		addr.sin_port = htons(1999);
 		addr.sin_family = AF_INET;
 
 		SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
