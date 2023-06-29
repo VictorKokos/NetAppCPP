@@ -47,7 +47,7 @@ int main()
 
         SOCKADDR_IN addr;
         int sizeofaddr = sizeof(addr);
-        addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        addr.sin_addr.s_addr = INADDR_ANY;
         addr.sin_port = htons(2000);
         addr.sin_family = AF_INET;
 
@@ -67,15 +67,34 @@ int main()
         int lc = sizeof(clnt);
         char ibuf[50]; //буфер ввода 
         int lb = 0; //количество принятых байт
-        if (lb = recvfrom(sS, ibuf, sizeof(ibuf), NULL, (sockaddr*)&clnt, &lc) == SOCKET_ERROR)
+
+ 
+        char count[5];
+    
+        if (lb = recvfrom(sS, count, sizeof(count), NULL, (sockaddr*)&clnt, &lc) == SOCKET_ERROR)
             throw SetErrorMsgText("recv:", WSAGetLastError());
+        int count_int = atoi(count);
+
+        for (int i = 0; i <= count_int; i++)
+        {
+            if (lb = recvfrom(sS, ibuf, sizeof(ibuf), NULL, (sockaddr*)&clnt, &lc) == SOCKET_ERROR)
+                throw SetErrorMsgText("recv:", WSAGetLastError());
 
 
+            cout << ibuf << endl;
+
+            if ((lb = sendto(sS, ibuf, strlen(ibuf) + 1, NULL,
+                (sockaddr*)&clnt, sizeof(clnt))) == SOCKET_ERROR)
+                throw  SetErrorMsgText("recv:", WSAGetLastError());
 
 
+            if (lb = recvfrom(sS, ibuf, sizeof(ibuf), NULL, (sockaddr*)&clnt, &lc) == SOCKET_ERROR)
+                throw SetErrorMsgText("recv:", WSAGetLastError());
+        
 
-     
-
+            cout << ibuf << endl;
+        }
+        system("pause");
         //ЗАКРЫТИЕ
         if (closesocket(sS) == SOCKET_ERROR)
             throw SetErrorMsgText("closesocket:", WSAGetLastError());

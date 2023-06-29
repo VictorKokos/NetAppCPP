@@ -45,22 +45,64 @@ int main()
             throw SetErrorMsgText("startup:", WSAGetLastError());
         }
 
-        SOCKADDR_IN addr;
-        int sizeofaddr = sizeof(addr);
-        addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-        addr.sin_port = htons(2000);
-        addr.sin_family = AF_INET;
 
-        SOCKET sListen = socket(AF_INET, SOCK_DGRAM, NULL);
-        bind(sListen, (SOCKADDR*)&addr, sizeof(addr));
-       
+        SOCKET cC = socket(AF_INET, SOCK_DGRAM, NULL);
 
-
-
+        SOCKADDR_IN serv;              // параметры  сокета сервера
+        int ls = sizeof(serv);
+        serv.sin_family = AF_INET;    // используется ip-адресация  
+        serv.sin_port = htons(2000);   // порт 2000
+        serv.sin_addr.s_addr = inet_addr("192.168.50.110"); // адрес сервера  
+        char obuf[50] = "Hello from ClientU";   //буфер вывода
+        int  lobuf = 0;                    //количество отправленных  
 
 
+        int num;
+        cout << "Enter number of messages" << endl;
+        cin >> num;
+        clock_t start = clock();
+        char count[5];
+        itoa(num, count, 10);
+
+        if ((lobuf = sendto(cC, count, strlen(count) + 1, NULL,
+            (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
+            throw  SetErrorMsgText("send:", WSAGetLastError());
+
+        for (int i = 0; i <= num; i++)
+        {
+            sprintf(obuf, "Hello from Client%d", i);
 
 
+            if ((lobuf = sendto(cC, obuf, strlen(obuf) + 1, NULL,
+                (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
+                throw  SetErrorMsgText("send:", WSAGetLastError());
+
+            
+
+
+            if (lobuf = recvfrom(cC, obuf, sizeof(obuf), NULL, (sockaddr*)&serv, &ls) == SOCKET_ERROR)
+                throw SetErrorMsgText("recv:", WSAGetLastError());
+
+            cout << obuf << endl;
+
+           
+            int received_i;
+            sscanf(obuf, "Hello from Client%d", &received_i);
+            received_i++;
+
+            sprintf(obuf, "Hello from Client%d", received_i);
+
+            if ((lobuf = sendto(cC, obuf, strlen(obuf) + 1, NULL,
+                (sockaddr*)&serv, sizeof(serv))) == SOCKET_ERROR)
+                throw  SetErrorMsgText("send:", WSAGetLastError());
+
+        }
+
+        clock_t end = clock();
+        double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+        cout << "Elapsed time: " << elapsed_time << " seconds" << endl;
+
+     
 
 
 
@@ -71,7 +113,7 @@ int main()
         system("pause");
 
         //ЗАКРЫТИЕ
-        if (closesocket(sListen) == SOCKET_ERROR)
+        if (closesocket(cC) == SOCKET_ERROR)
             throw SetErrorMsgText("closesocket:", WSAGetLastError());
 
         if (WSACleanup() == SOCKET_ERROR)
@@ -80,6 +122,6 @@ int main()
     }
     catch (string errorMsgText)
     {
-        cout << endl << "WSAGetLastError: " << errorMsgText;
+        cout << endl << "WSAGetLastError: " << errorMsgText << WSAGetLastError();
     }
 }

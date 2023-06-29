@@ -1,2 +1,3 @@
 ﻿  ServerU.cpp
+D:\Work\NetApp\Labs\Lab3\ServerU\ServerU.cpp(87,1): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
   ServerU.vcxproj -> D:\Work\NetApp\Labs\Lab3\x64\Debug\ServerU.exe
