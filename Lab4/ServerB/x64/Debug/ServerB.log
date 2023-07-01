@@ -1,4 +1,5 @@
 ﻿  ServerB.cpp
-D:\Work\NetApp\Labs\Lab4\ServerB\ServerB.cpp(124,29): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-D:\Work\NetApp\Labs\Lab4\ServerB\ServerB.cpp(168,14): warning C4101: ibuf: неиспользованная локальная переменная
+D:\Work\NetApp\Labs\Lab4\ServerB\ServerB.cpp(130,29): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Work\NetApp\Labs\Lab4\ServerB\ServerB.cpp(155,8): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Work\NetApp\Labs\Lab4\ServerB\ServerB.cpp(227,14): warning C4101: ibuf: неиспользованная локальная переменная
   ServerB.vcxproj -> D:\Work\NetApp\Labs\Lab4\x64\Debug\ServerB.exe

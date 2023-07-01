@@ -1,3 +1,4 @@
 ﻿  ClientB.cpp
-D:\Work\NetApp\Labs\Lab4\ClientB\ClientB.cpp(41,33): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Work\NetApp\Labs\Lab4\ClientB\ClientB.cpp(90,8): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Work\NetApp\Labs\Lab4\ClientB\ClientB.cpp(137,33): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
   ClientB.vcxproj -> D:\Work\NetApp\Labs\Lab4\x64\Debug\ClientB.exe

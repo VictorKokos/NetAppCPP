@@ -86,7 +86,7 @@ bool GetRequestFromClient(char* name, short port, struct sockaddr* from, int* fl
 
     if (bind(sS, (LPSOCKADDR)&serv, sizeof(serv)) == SOCKET_ERROR)
         throw SetErrorMsgText("bind:", WSAGetLastError());
-
+  
     char ibuf[50];
     int libuf = 0;
     int optval = 1;
@@ -106,10 +106,16 @@ bool GetRequestFromClient(char* name, short port, struct sockaddr* from, int* fl
         }
         ibuf[libuf] = 0x00;
         if (strcmp(ibuf, name) == 0)
+        {
+
+            SOCKADDR_IN* clientAddr = (SOCKADDR_IN*)from;
+            cout << "Client address: " << inet_ntoa(clientAddr->sin_addr) << ":" << ntohs(clientAddr->sin_port) << endl;
             break;
+        }
     }
     if (closesocket(sS) == SOCKET_ERROR)
         throw SetErrorMsgText("closesocket:", WSAGetLastError());
+   
     return true;
 }
 
@@ -124,12 +130,64 @@ bool PutAnswerToClient(char* name, struct sockaddr* to, int* lto)
     int lobuf = strlen(name);
     if (sendto(sS, name, lobuf + 1, NULL, to, *lto) == SOCKET_ERROR)
         throw SetErrorMsgText("sendto:", WSAGetLastError());
-
+    
     if (closesocket(sS) == SOCKET_ERROR)
         throw SetErrorMsgText("closesocket:", WSAGetLastError());
     return true;
 }
 
+void CheckForOtherServers(char* name, short port)
+{
+    SOCKET sS;
+    SOCKADDR_IN serv;
+    serv.sin_family = AF_INET;
+    serv.sin_port = htons(port);
+    serv.sin_addr.s_addr = INADDR_BROADCAST;
+
+    if ((sS = socket(AF_INET, SOCK_DGRAM, NULL)) == INVALID_SOCKET)
+        throw SetErrorMsgText("socket:", WSAGetLastError());
+
+    int optval = 1;
+    int lbuflen = sizeof(int);
+    if (setsockopt(sS, SOL_SOCKET, SO_BROADCAST, (char*)&optval, lbuflen) == SOCKET_ERROR)
+        throw SetErrorMsgText("setsockopt:", WSAGetLastError());
+
+    if (sendto(sS, name, strlen(name) + 1, NULL, (sockaddr*)&serv, sizeof(serv)) == SOCKET_ERROR)
+        throw SetErrorMsgText("sendto:", WSAGetLastError());
+
+    // Устанавливаем тайм-аут для операции приема
+    int timeout = 5000; // 5 seconds
+    if (setsockopt(sS, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout)) == SOCKET_ERROR)
+        throw SetErrorMsgText("setsockopt:", WSAGetLastError());
+
+    char ibuf[50];
+    int libuf = 0;
+    SOCKADDR_IN from;
+    int flen = sizeof(from);
+    int serverCount = 0;
+
+    while (true)
+    {
+        if ((libuf = recvfrom(sS, ibuf, sizeof(ibuf), NULL, (sockaddr*)&from, &flen)) == SOCKET_ERROR)
+        {
+            if (WSAGetLastError() == WSAETIMEDOUT)
+                break;
+            else
+                throw SetErrorMsgText("recvfrom:", WSAGetLastError());
+        }
+        ibuf[libuf] = 0x00;
+        if (strcmp(ibuf, name) == 0)
+        {
+            serverCount++;
+            cout << "Server found: " << inet_ntoa(from.sin_addr) << ":" << ntohs(from.sin_port) << endl;
+        }
+    }
+
+    cout << "Total servers found: " << serverCount << endl;
+
+    if (closesocket(sS) == SOCKET_ERROR)
+        throw SetErrorMsgText("closesocket:", WSAGetLastError());
+}
 
 
 int main()
@@ -151,15 +209,16 @@ int main()
         bind(sS, (SOCKADDR*)&addr, sizeof(addr));
 
 
-
+       CheckForOtherServers(name, 3000);
 
         while (true)
         {
-            bool result = GetRequestFromClient(name, 2002, (struct sockaddr*)&addr, &sizeofaddr);
+        
+            bool result = GetRequestFromClient(name, 3000, (struct sockaddr*)&addr, &sizeofaddr);
 
             if (result)
             {
-                PutAnswerToClient(name, (struct sockaddr*)&addr, &sizeofaddr);
+               PutAnswerToClient(name, (struct sockaddr*)&addr, &sizeofaddr);
             }
         }
         SOCKADDR_IN clnt; // параметры сокета клиента
