@@ -1,0 +1,4 @@
+﻿  ServerNPt.cpp
+D:\Work\NetApp\Labs\Lab6\ServerNPt\ServerNPt.cpp(44,64): warning C4267: аргумент: преобразование из "size_t" в "DWORD"; возможна потеря данных
+D:\Work\NetApp\Labs\Lab6\ServerNPt\ServerNPt.cpp(47,56): warning C4267: аргумент: преобразование из "size_t" в "DWORD"; возможна потеря данных
+  ServerNPt.vcxproj -> D:\Work\NetApp\Labs\Lab6\x64\Debug\ServerNPt.exe

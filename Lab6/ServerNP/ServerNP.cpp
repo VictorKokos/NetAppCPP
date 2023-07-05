@@ -89,6 +89,10 @@ int main()
     try
     {
         HANDLE hPipe;
+        char buffer[1024];
+        DWORD dwRead;
+
+
 
         if ((hPipe = CreateNamedPipe(L"\\\\.\\pipe\\Tube",
             PIPE_ACCESS_DUPLEX, //дуплексный канал
@@ -98,6 +102,30 @@ int main()
             throw SetPipeError("create:", GetLastError());
         if (!ConnectNamedPipe(hPipe, NULL)) // ожидать клиента 
             throw SetPipeError("connect:", GetLastError());
+
+
+        int count_int = 0;
+        while (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL) != FALSE)
+        {
+
+            buffer[dwRead] = '\0';
+
+             count_int = atoi(buffer);
+
+             for (int i = 0; i <= count_int; i++)
+             {
+                 ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL);
+                 cout << buffer << endl;
+
+                 WriteFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL);
+
+                 ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL);
+                 cout << buffer << endl;
+             }
+        }
+
+            
+       
 
         // Отключить именованный канал
         DisconnectNamedPipe(hPipe);
