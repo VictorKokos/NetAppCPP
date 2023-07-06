@@ -7,6 +7,8 @@ using namespace std;
 
 
 
+
+
 string GetPipeError(int code) // Функция позволяет получить сообщение ошибки
 {
 

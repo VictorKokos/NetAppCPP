@@ -4,7 +4,6 @@
 using namespace std;
 
 
-#define PIPEG TEXT("\\\\DESKTOP-H8I2O28\\pipe\\Tube")
 #define PIPEL TEXT("\\\\.\\pipe\\Tube")
 #define MAX_SIZE_OF_BUFFER 64
 
@@ -31,7 +30,7 @@ int main()
 		{
 			throw SetPipeError("CallNamedPipe:", GetLastError());
 		}
-		cout << "Сервер прислал СМС: " << outbuffer << endl;
+		cout << "Сервер прислал сообщение: " << outbuffer << endl;
 	}
 	catch (string ErrorPipeText) {
 		cout << endl << ErrorPipeText;
