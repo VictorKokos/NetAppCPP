@@ -1,0 +1,4 @@
+﻿  ClientMS.cpp
+D:\Work\NetApp\Labs\Lab7\ClientMS\ClientMS.cpp(93,21): warning C4101: hM2: неиспользованная локальная переменная
+D:\Work\NetApp\Labs\Lab7\ClientMS\ClientMS.cpp(93,26): warning C4101: hM3: неиспользованная локальная переменная
+  ClientMS.vcxproj -> D:\Work\NetApp\Labs\Lab7\x64\Debug\ClientMS.exe
