@@ -77,7 +77,7 @@ bool GetServer(char* call, short port, struct sockaddr* from, int* flen)
     SOCKADDR_IN serv;
     serv.sin_family = AF_INET;
     serv.sin_port = htons(port);
-    serv.sin_addr.s_addr = INADDR_BROADCAST;
+    serv.sin_addr.s_addr = inet_addr("192.168.50.110"); // Це важно поменяты
 
     if ((sS = socket(AF_INET, SOCK_DGRAM, NULL)) == INVALID_SOCKET)
         throw SetErrorMsgText("socket:", WSAGetLastError());
